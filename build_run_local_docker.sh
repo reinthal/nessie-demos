@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/nix/store/p6k7xp1lsfmbdd731mlglrdj2d66mr82-bash-5.2p37/bin/bash -e
+
 #
 # Copyright (C) 2022 Dremio
 #
@@ -16,8 +17,8 @@
 #
 
 if ! command -v jupyter-repo2docker >/dev/null; then
-  echo "Please prepare a python environment with jupyter-repo2docker!"
-  exit 1
+	echo "Please prepare a python environment with jupyter-repo2docker!"
+	exit 1
 fi
 
 set -x
@@ -31,11 +32,11 @@ trap "sed -i.bak 's#FROM projectnessie#FROM ghcr.io/projectnessie#' binder/Docke
 
 DOCKER_FULL_IMAGE_NAME=$(grep -i 'FROM' binder/Dockerfile | cut -f2 -d" ")
 if docker image inspect "${DOCKER_FULL_IMAGE_NAME}" >/dev/null 2>&1; then
-  echo "base image tag already exists - nothing to build"
+	echo "base image tag already exists - nothing to build"
 else
-  # build base image with the new tag locally
-  echo "base image tag has changed! - starting build..."
-  bash -ex .github/scripts/create_base_docker_image.sh "${DOCKER_FULL_IMAGE_NAME}"
+	# build base image with the new tag locally
+	echo "base image tag has changed! - starting build..."
+	bash -ex .github/scripts/create_base_docker_image.sh "${DOCKER_FULL_IMAGE_NAME}"
 fi
 
 # build and run repo
